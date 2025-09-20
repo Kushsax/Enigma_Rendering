@@ -3,7 +3,9 @@ import {
   createProject,
   getProjects,
   getProjectById,
-  updateDonationProgress
+  updateDonationProgress,
+  updateProject,
+  deleteProject
 } from "../controllers/projectController.js";
 
 const router = express.Router();
@@ -17,7 +19,13 @@ router.get("/", getProjects);
 // GET: Single project by ID
 router.get("/:id", getProjectById);
 
-// PATCH: Update donation progress
+// PUT: Update project (full update for edit functionality)
+router.put("/:id", updateProject);
+
+// DELETE: Delete project
+router.delete("/:id", deleteProject);
+
+// PATCH: Update donation progress only
 router.patch("/:id/donation", updateDonationProgress);
 
 export default router;

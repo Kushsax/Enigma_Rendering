@@ -9,22 +9,40 @@ const HomePage = () => {
     details: "",
     donationGoal: "",
     images: "",
+    acceptsInKind: false,
+    items: [], // ✅ will store selected items
   });
 
-  const navigate = useNavigate(); // ✅ for redirect
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setFormData({
+        ...formData,
+        [name]: checked,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleItemToggle = (item) => {
+    setFormData((prev) => {
+      if (prev.items.includes(item)) {
+        return { ...prev, items: prev.items.filter((i) => i !== item) };
+      } else {
+        return { ...prev, items: [...prev.items, item] };
+      }
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      // Convert comma-separated images into array
       const payload = {
         ...formData,
         donationGoal: Number(formData.donationGoal),
@@ -33,19 +51,21 @@ const HomePage = () => {
 
       const res = await axios.post("http://localhost:8080/api/projects", payload);
       toast.success("✅ Project created successfully!");
-      console.log(res.data);
 
-      // Reset form
+      const savedProjects = JSON.parse(localStorage.getItem("myProjects")) || [];
+      savedProjects.unshift(res.data.project);
+      localStorage.setItem("myProjects", JSON.stringify(savedProjects));
+
       setFormData({
         name: "",
         details: "",
         donationGoal: "",
         images: "",
+        acceptsInKind: false,
+        items: [],
       });
 
-      // ✅ Redirect to Creator Dashboard
       navigate("/creator-dashboard");
-
     } catch (err) {
       console.error(err);
       toast.error("❌ Failed to create project");
@@ -59,65 +79,78 @@ const HomePage = () => {
           <h2 className="text-2xl font-bold text-center mb-4">Create a Project</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Project Name */}
-            <div>
-              <label className="label">
-                <span className="label-text">Project Name</span>
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter project name"
-                className="input input-bordered w-full"
-                required
-              />
-            </div>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter project name"
+              className="input input-bordered w-full"
+              required
+            />
 
             {/* Project Details */}
-            <div>
-              <label className="label">
-                <span className="label-text">Project Details</span>
-              </label>
-              <textarea
-                name="details"
-                value={formData.details}
-                onChange={handleChange}
-                placeholder="Enter project details"
-                className="textarea textarea-bordered w-full"
-                required
-              />
-            </div>
+            <textarea
+              name="details"
+              value={formData.details}
+              onChange={handleChange}
+              placeholder="Enter project details"
+              className="textarea textarea-bordered w-full"
+              required
+            />
 
             {/* Donation Goal */}
-            <div>
-              <label className="label">
-                <span className="label-text">Donation Goal</span>
-              </label>
-              <input
-                type="number"
-                name="donationGoal"
-                value={formData.donationGoal}
-                onChange={handleChange}
-                placeholder="Enter donation goal"
-                className="input input-bordered w-full"
-                required
-              />
-            </div>
+            <input
+              type="number"
+              name="donationGoal"
+              value={formData.donationGoal}
+              onChange={handleChange}
+              placeholder="Enter donation goal"
+              className="input input-bordered w-full"
+              required
+            />
 
             {/* Image URLs */}
+            <input
+              type="text"
+              name="images"
+              value={formData.images}
+              onChange={handleChange}
+              placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg"
+              className="input input-bordered w-full"
+            />
+
+            {/* ✅ In-Kind Donations */}
             <div>
-              <label className="label">
-                <span className="label-text">Image URLs (comma separated)</span>
+              <label className="cursor-pointer flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="acceptsInKind"
+                  checked={formData.acceptsInKind}
+                  onChange={handleChange}
+                  className="checkbox checkbox-primary"
+                />
+                <span>Accept In-Kind Donations</span>
               </label>
-              <input
-                type="text"
-                name="images"
-                value={formData.images}
-                onChange={handleChange}
-                placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg"
-                className="input input-bordered w-full"
-              />
+
+              {formData.acceptsInKind && (
+                <div className="mt-3 space-y-2">
+                  {["Clothes", "Books", "Food", "Toys"].map((item) => (
+                    <label
+                      key={item}
+                      className="cursor-pointer flex items-center gap-2"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={formData.items.includes(item)}
+                        onChange={() => handleItemToggle(item)}
+                        className="checkbox checkbox-sm"
+                      />
+                      <span>{item}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Submit Button */}

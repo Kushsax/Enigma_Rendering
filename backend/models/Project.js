@@ -1,30 +1,42 @@
 import mongoose from "mongoose";
 
-const projectSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
+const projectSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    details: {
+      type: String,
+      required: true,
+    },
+    images: {
+      type: [String], // Array of image URLs
+      default: [],
+    },
+    donationGoal: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    donationProgress: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    // ✅ In-kind donation fields
+    acceptsInKind: {
+      type: Boolean,
+      default: false,
+    },
+    items: {
+      type: [String],
+      default: [],
+    },
   },
-  details: {
-    type: String,
-    required: true
-  },
-  images: {
-    type: [String], // Array of image URLs
-    default: []
-  },
-  donationGoal: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  donationProgress: {
-    type: Number,
-    default: 0,
-    min: 0
-  },
-}, { timestamps: true });
+  { timestamps: true }
+);
 
 const Project = mongoose.model("Project", projectSchema);
 

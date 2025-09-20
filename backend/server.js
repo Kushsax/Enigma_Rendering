@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import { connectDB } from "./models/db.js";
 import bodyParser from "body-parser";
 import cors from "cors";
+import paymentRoutes from "./routes/paymentRoutes.js";
+
+
 
 // Routes
 import authRouter from "./routes/authRouter.js";
@@ -22,6 +25,7 @@ app.use(cors());
 // Routes
 app.use("/auth", authRouter);            // Login/Auth
 app.use("/api/projects", projectRouter); // Project posting
+app.use("/api/payments", paymentRoutes);
 
 // Server start
 app.listen(PORT, () => {

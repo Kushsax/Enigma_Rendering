@@ -6,6 +6,7 @@ import UserHome from "./pages/UserHome";
 import CreatorHome from "./pages/CreatorHome";
 import HelloWorld from './pages/HelloWorld'; 
 import CreatorDashboard from "./pages/CreatorDashboard";
+import ProjectDashboard from "./pages/ProjectDashboard";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
         <Route path="/hello" element={<HelloWorld />} /> 
 
         {/* Homes */}
-
+        <Route path="/project/:id" element={<ProjectDashboard />} />
         <Route path="/user-home" element={<UserHome />} />
         <Route path="/creator-home" element={<CreatorHome />} />
       </Routes>
