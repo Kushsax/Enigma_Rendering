@@ -42,7 +42,9 @@ function Login() {
 
         setTimeout(() => {
           if (role === "creator") {
-            navigate('/creator-home');
+            navigate('/creator-dashboard');
+          } else if (role === "moderator") {
+            navigate('/mod');
           } else {
             navigate('/user-home');
           }
@@ -106,6 +108,7 @@ function Login() {
             >
               <option value="user">User</option>
               <option value="creator">Creator</option>
+              <option value="moderator">Moderator</option>
             </select>
           </div>
           {/* Submit */}

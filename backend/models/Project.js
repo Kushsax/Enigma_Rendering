@@ -25,6 +25,7 @@ const projectSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+
     // ✅ In-kind donation fields
     acceptsInKind: {
       type: Boolean,
@@ -33,6 +34,38 @@ const projectSchema = new mongoose.Schema(
     items: {
       type: [String],
       default: [],
+    },
+
+    // ✅ Moderation + creator tracking
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // assumes you have a User model
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "declined"],
+      default: "pending",
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    approvedAt: {
+      type: Date,
+    },
+    declinedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    declinedAt: {
+      type: Date,
+    },
+    declinedReason: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true }

@@ -4,6 +4,7 @@ import SignUp from './pages/SignUp';
 
 import UserHome from "./pages/UserHome";
 import CreatorHome from "./pages/CreatorHome";
+import ModeratorDashboard from "./pages/ModeratorDashboard";
 import HelloWorld from './pages/HelloWorld'; 
 import CreatorDashboard from "./pages/CreatorDashboard";
 import ProjectDashboard from "./pages/ProjectDashboard";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/project/:id" element={<ProjectDashboard />} />
         <Route path="/user-home" element={<UserHome />} />
         <Route path="/creator-home" element={<CreatorHome />} />
+        <Route path="/mod" element={<ModeratorDashboard />} />
       </Routes>
     </div>
   );
